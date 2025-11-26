@@ -26,4 +26,6 @@ fn main() {
     let result = seq_list.remove(6);
     println!("result = {:?}", result);
     seq_list.print();
+    println!("Max length of seq_list = {}", seq_list.capacity());
+    println!("Length of seq_list = {}", seq_list.len());
 }

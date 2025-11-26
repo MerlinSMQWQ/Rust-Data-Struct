@@ -2,7 +2,7 @@
  * @Author: MerlinSMQWQ MerlinSMQWQ@proton.me
  * @Date: 2025-11-25 00:10:15
  * @LastEditors: MerlinSMQWQ MerlinSMQWQ@proton.me
- * @LastEditTime: 2025-11-25 21:27:09
+ * @LastEditTime: 2025-11-26 16:39:14
  * @FilePath: \Rust-Data-Struct\src\linear_list\sequence_list.rs
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -105,6 +105,8 @@ impl<T: std::fmt::Debug, const N: usize> SeqList<T, N> {
     pub fn remove(&mut self, pos: usize) -> Result<Option<T>, &'static str> {
         if pos < 1 && pos >= self.len {
             Err("Out of List")
+        } else if self.is_empty() {
+            Err("List is empty")
         } else {
             let removed = self.data[pos - 1].take();
             for i in pos..=(self.len - 1) {
