@@ -2,15 +2,15 @@
  * @Author: MerlinSMQWQ MerlinSMQWQ@proton.me
  * @Date: 2025-11-26 17:28:42
  * @LastEditors: MerlinSMQWQ MerlinSMQWQ@proton.me
- * @LastEditTime: 2025-11-28 14:24:11
+ * @LastEditTime: 2025-11-28 17:24:41
  * @FilePath: \Rust-Data-Struct\src\linear_list\singly_linked_list.rs
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 // NonNull是一个包装过的原始指针，可以保证指针部位null，可以喝Box配合来管理堆内存
-use std::{io::Cursor, ptr::NonNull};
+use std::ptr::NonNull;
 
-pub struct Node<T: std::fmt::Debug> {
+pub struct Node<T> {
     pub data: T,
     pub next: Option<NonNull<Node<T>>>,
 }
