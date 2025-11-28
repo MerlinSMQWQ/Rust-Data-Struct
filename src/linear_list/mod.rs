@@ -8,3 +8,4 @@
  */
 
 pub mod sequence_list;
+pub mod singly_linked_list;
