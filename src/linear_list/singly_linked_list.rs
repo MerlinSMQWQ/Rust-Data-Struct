@@ -2,7 +2,7 @@
  * @Author: MerlinSMQWQ MerlinSMQWQ@proton.me
  * @Date: 2025-11-26 17:28:42
  * @LastEditors: MerlinSMQWQ MerlinSMQWQ@proton.me
- * @LastEditTime: 2025-11-28 17:24:41
+ * @LastEditTime: 2025-11-30 21:51:42
  * @FilePath: \Rust-Data-Struct\src\linear_list\singly_linked_list.rs
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,7 +10,7 @@
 // NonNull是一个包装过的原始指针，可以保证指针部位null，可以喝Box配合来管理堆内存
 use std::ptr::NonNull;
 
-pub struct Node<T> {
+pub struct Node<T: std::fmt::Debug> {
     pub data: T,
     pub next: Option<NonNull<Node<T>>>,
 }
@@ -86,6 +86,12 @@ impl<T: std::fmt::Debug> SinglyLinkedList<T> {
             Ok(())
         } else {
             let mut node = Box::new(Node::new(element));
+
+            // 添加空指针判断
+            if self.next.is_none() {
+                return Err("Invalid position for empty list!")
+            }
+            
             let mut current_ptr = self.next.unwrap();
 
             // 移动到 pos-1 位置（插入位置的前一个节点）
@@ -105,7 +111,7 @@ impl<T: std::fmt::Debug> SinglyLinkedList<T> {
     }
 
     // 按位置删除元素
-    pub fn delet(&mut self, pos: usize) -> Result<(), &'static str> {
+    pub fn delete(&mut self, pos: usize) -> Result<(), &'static str> {
         if self.len() == 0 {
             return Err("No elements in List!");
         }
@@ -248,7 +254,7 @@ mod tests {
     }
 
     #[test]
-    fn test_delet() {
+    fn test_delete() {
         let mut list = SinglyLinkedList::new();
         list.push(1);
         list.push(2);
@@ -256,27 +262,27 @@ mod tests {
         list.push(4);
         
         // 删除头部
-        list.delet(1).unwrap();
+        list.delete(1).unwrap();
         assert_eq!(list.len(), 3);
         assert_eq!(*list.get(1).unwrap(), 2);
         
         // 删除中间
-        list.delet(2).unwrap();
+        list.delete(2).unwrap();
         assert_eq!(list.len(), 2);
         assert_eq!(*list.get(2).unwrap(), 4);
         
         // 删除尾部
-        list.delet(2).unwrap();
+        list.delete(2).unwrap();
         assert_eq!(list.len(), 1);
         assert_eq!(*list.get(1).unwrap(), 2);
         
         // 删除最后一个
-        list.delet(1).unwrap();
+        list.delete(1).unwrap();
         assert_eq!(list.len(), 0);
         
         // 边界测试
-        assert!(list.delet(1).is_err());
-        assert!(list.delet(0).is_err());
+        assert!(list.delete(1).is_err());
+        assert!(list.delete(0).is_err());
     }
 
     #[test]
@@ -293,7 +299,7 @@ mod tests {
         assert_eq!(*list.get(2).unwrap(), 2);
         assert_eq!(*list.get(3).unwrap(), 3);
         
-        list.delet(2).unwrap();
+        list.delete(2).unwrap();
         assert_eq!(list.len(), 2);
         assert_eq!(*list.get(1).unwrap(), 1);
         assert_eq!(*list.get(2).unwrap(), 3);
