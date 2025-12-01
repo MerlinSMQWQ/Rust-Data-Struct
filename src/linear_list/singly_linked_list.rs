@@ -2,7 +2,7 @@
  * @Author: MerlinSMQWQ MerlinSMQWQ@proton.me
  * @Date: 2025-11-26 17:28:42
  * @LastEditors: MerlinSMQWQ MerlinSMQWQ@proton.me
- * @LastEditTime: 2025-11-30 21:51:42
+ * @LastEditTime: 2025-12-01 16:36:42
  * @FilePath: \Rust-Data-Struct\src\linear_list\singly_linked_list.rs
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -27,6 +27,16 @@ impl<T: std::fmt::Debug> Node<T> {
 pub struct SinglyLinkedList<T: std::fmt::Debug> {
     pub length: usize,
     pub next: Option<NonNull<Node<T>>>,
+}
+
+impl<T: std::fmt::Debug> Drop for SinglyLinkedList<T> {
+    fn drop(&mut self) {
+        while let Some(ptr) = self.next.take() {
+            let node = unsafe { Box::from_raw(ptr.as_ptr()) };
+            self.next = node.next;
+            // node 会在离开作用域时自动被 drop
+        }
+    }
 }
 
 impl<T: std::fmt::Debug> SinglyLinkedList<T> {
