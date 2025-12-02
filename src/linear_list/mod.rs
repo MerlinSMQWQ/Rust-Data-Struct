@@ -10,3 +10,4 @@
 pub mod double_linked_list;
 pub mod sequence_list;
 pub mod singly_linked_list;
+pub mod sequential_stack;

@@ -1,4 +1,4 @@
-use std::{marker::PhantomData, ptr::NonNull};
+use std::{marker::PhantomData, mem, ptr::NonNull};
 
 use crate::linear_list::singly_linked_list::Node;
 
@@ -118,5 +118,47 @@ impl<T> DoubleLinkedList<T> {
             self.len -= 1;
             node
         })
+    }
+
+    unsafe fn unlink_node(&mut self, mut node: NonNull<DoubleLinkedNode<T>>) {
+        let node = unsafe {
+            node.as_mut()
+        };
+        match node.prev {
+            None => self.head = node.next,
+            Some(next) => unsafe { (*next.as_ptr()).next = node.next },
+        }
+
+        match node.next {
+            None => self.tail = node.prev,
+            Some(prev) => unsafe { (*prev.as_ptr()).prev = node.prev }
+        }
+
+        self.len -= 1;
+    }
+}
+
+impl<T> Drop for DoubleLinkedList<T> {
+    fn drop(&mut self) {
+        /// 使用 **防御性临时变量** 模式防止析构过程中出现异常导致资源泄漏（定义一个内部结构体作为“守卫”，它持有一个指向当前链表的可变引用。）
+        struct DropGuard<'a, T>(&'a mut DoubleLinkedList<T>);
+
+        // 为这个守卫也实现 Drop trait，在其自身被销毁时执行清理操作，'a 标注了 DropGuard 结构体中持有的引用 &'a mut DoubleLinkedList<T> 的生命周期，表明这个引用的有效期为 'a。通过 'a，编译器知道 DropGuard 实例不能比它所借用的 DoubleLinkedList<T> 实例存活更久，防止悬垂引用。
+        impl<'a, T> Drop for DropGuard<'a, T> {
+            fn drop(&mut self) {
+                // 不断从链表头部弹出节点直到链表为空。
+                while self.0.pop_front_node().is_some() {}
+            }
+        }
+
+        // 每次取出一个节点 (pop_front_node)
+        while let Some(node) = self.pop_front_node() {
+            // 创建一个 DropGuard 守护该链表
+            let guard = DropGuard(self);
+            // 显式丢弃节点 (drop(node))
+            drop(node);
+            // 忽略掉守卫
+            mem::forget(guard);
+        }
     }
 }
