@@ -49,6 +49,12 @@ impl<T> LinkedStack<T> {
     }
 }
 
+impl<T> Drop for LinkedStack<T> {
+    fn drop(&mut self) {
+        while self.pop().is_ok() {}
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
