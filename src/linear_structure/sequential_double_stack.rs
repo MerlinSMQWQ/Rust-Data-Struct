@@ -2,17 +2,18 @@
  * @Author: MerlinSMQWQ MerlinSMQWQ@proton.me
  * @Date: 2025-12-02 18:09:02
  * @LastEditors: MerlinSMQWQ MerlinSMQWQ@proton.me
- * @LastEditTime: 2025-12-02 19:23:55
+ * @LastEditTime: 2025-12-04 09:37:34
  * @FilePath: \Rust-Data-Struct\src\linear_list\sequential_double_stack.rs
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-struct SqDoubleStack<T, const N: usize> {
+
+pub struct SqDoubleStack<T, const N: usize> {
     data: [Option<T>; N],
     top0: usize,
     top1: usize
 }
 
-enum StackNum {
+pub enum StackNum {
     First = 0,
     Second = 1,
 }

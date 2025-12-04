@@ -1,7 +1,5 @@
 use std::{marker::PhantomData, mem, ptr::NonNull};
 
-use crate::linear_structure::singly_linked_list::Node;
-
 pub struct DoubleLinkedList<T> {
     // 等同于使用裸指针，但是需要额外注意内存安全问题，Option增加了一定的安全性
     head: Option<NonNull<DoubleLinkedNode<T>>>,

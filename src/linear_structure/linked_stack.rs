@@ -5,7 +5,7 @@ struct StackNode<T> {
     next: Option<NonNull<StackNode<T>>>,
 }
 
-struct LinkedStack<T> {
+pub struct LinkedStack<T> {
     len: usize,
     head: Option<NonNull<StackNode<T>>>
 }
